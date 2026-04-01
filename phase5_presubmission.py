@@ -133,6 +133,25 @@ except Exception as e:
     print(f"  Bootstrap p-value (one-sided): {p_boot:.4f}")
 
 
+
+# --- DeLong cross-check using bootstrap comparison ---
+print(f"\n  Cross-check with bootstrap paired comparison (2000 resamples):")
+n_boot_check = 2000
+diffs_check = []
+n_check = len(rho_y)
+for _ in range(n_boot_check):
+    idx = np.random.choice(n_check, n_check, replace=True)
+    if len(np.unique(rho_y[idx])) < 2:
+        continue
+    a_b_boot = roc_auc_score(rho_y[idx], rho_proba_b[idx])
+    a_a_boot = roc_auc_score(rho_y[idx], rho_proba_am[idx])
+    diffs_check.append(a_b_boot - a_a_boot)
+diffs_check = np.array(diffs_check)
+p_boot_check = (diffs_check <= 0).mean()
+print(f"    Bootstrap AUROC diff: {diffs_check.mean():.3f} (95% CI: [{np.percentile(diffs_check, 2.5):.3f}, {np.percentile(diffs_check, 97.5):.3f}])")
+print(f"    Bootstrap p-value (one-sided, B>A): {p_boot_check:.4f}")
+print(f"    {'✓ Consistent with DeLong' if p_boot_check < 0.05 else '⚠ Inconsistent — investigate'}")
+
 # ========================================
 print(f"\n{'='*75}")
 print("STEP 2: LR vs RF FORMAL COMPARISON")

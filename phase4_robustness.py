@@ -32,6 +32,8 @@ print("STEP 1: BOOTSTRAP CONFIDENCE INTERVALS")
 print("=" * 75)
 
 def bootstrap_auroc(y_true, y_score, n_boot=2000):
+    """Returns (observed_auc, ci_low, ci_high) using percentile method."""
+    observed = roc_auc_score(y_true, y_score)
     aucs = []
     n = len(y_true)
     for _ in range(n_boot):
@@ -40,7 +42,7 @@ def bootstrap_auroc(y_true, y_score, n_boot=2000):
             continue
         aucs.append(roc_auc_score(y_true[idx], y_score[idx]))
     aucs = np.array(aucs)
-    return np.mean(aucs), np.percentile(aucs, 2.5), np.percentile(aucs, 97.5)
+    return observed, np.percentile(aucs, 2.5), np.percentile(aucs, 97.5)
 
 # V2R B5 (out-of-fold predictions)
 from sklearn.model_selection import cross_val_predict

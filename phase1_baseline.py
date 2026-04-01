@@ -149,12 +149,16 @@ for test_pos in pos_folds:
     proba = rf_s.predict_proba(X_all[test_mask])[:, 1]
     strict_aurocs.append(roc_auc_score(y[test_mask], proba))
 
-std_auroc = results[-1]['auroc']  # last model = B5_RF
+# Explicit lookup instead of relying on list order
+std_auroc = next(r['auroc'] for r in results if r['model'] == 'B5_L1+baseline_RF')
 strict_mean = np.mean(strict_aurocs)
 strict_std  = np.std(strict_aurocs)
 
 print(f"  Standard 5-fold CV AUROC (B5_RF):      {std_auroc:.3f}")
-print(f"  Leave-positions-out AUROC (B5_RF):      {strict_mean:.3f} ± {strict_std:.3f}")
+# Report as bootstrap-style percentile CI for consistency with manuscript
+strict_lo = np.percentile(strict_aurocs, 2.5)
+strict_hi = np.percentile(strict_aurocs, 97.5)
+print(f"  Leave-positions-out AUROC (B5_RF):      {strict_mean:.3f} (95% CI: [{strict_lo:.3f}, {strict_hi:.3f}])")
 print(f"  Drop: {std_auroc - strict_mean:.3f}")
 print(f"  (Large drop = positional leakage concern)")
 

@@ -79,7 +79,7 @@ print(f"  baseline_score: {rho_primary['baseline_score'].notna().sum()} / {len(r
 # We need to compute them OR use only features available in both
 print(f"\n  ⚠ RaSP, ThermoMPNN, ESM1b, delta_hydro NOT in Rhodopsin repo")
 print(f"  → For initial test, use AlphaMissense + baseline_score only")
-print(f"  → This matches B2-level from V2R (AM + stability proxy)")
+print(f"  → These are the two features shared between V2R and Rhodopsin datasets")
 
 # ========================================
 # STEP 2: APPLY FROZEN V2R MODEL
@@ -100,6 +100,8 @@ rf_am.fit(v2r_X_am, v2r_y)
 
 # Predict on Rhodopsin
 rho_test = rho_primary.dropna(subset=['alpha_missense']).copy()
+n_dropped = len(rho_primary) - len(rho_test)
+print(f"\n  Dropped {n_dropped} variants with missing AlphaMissense ({len(rho_primary)} → {len(rho_test)})")
 rho_X_am = rho_test[['alpha_missense']].values
 rho_y = rho_test['label'].values
 
