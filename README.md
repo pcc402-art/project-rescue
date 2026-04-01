@@ -10,9 +10,10 @@ Po-Chun Chen, Independent Researcher, Tainan, Taiwan
 |--------|-------------|
 | `phase1_baseline.py` | Progressive baseline models (B0–B5), feature importance, leakage test |
 | `phase2_aim2_mechanism.py` | Mechanistic analysis: two not-rescued subgroups, baseline-controlled analysis |
-| `phase3_aim3_rhodopsin.py` | Rhodopsin external validation with frozen V2R model |
+| `phase3_aim3_rhodopsin.py` | Rhodopsin external validation (2-feature, initial) |
+| `phase3_v2_full_rerun.py` | **Rhodopsin external validation (4-feature, final): AUROC 0.843** |
 | `phase4_robustness.py` | Bootstrap CIs, threshold sensitivity, permutation test |
-| `phase5_presubmission.py` | DeLong test, LR vs RF comparison, clinical variant overlay |
+| `phase5_presubmission.py` | LR vs RF comparison, clinical variant overlay |
 | `figures_v2.py` | Publication-quality figure generation |
 
 ## Data Sources
@@ -25,11 +26,11 @@ Po-Chun Chen, Independent Researcher, Tainan, Taiwan
 1. Download V2R supplementary data (MOESM3 XLSX) from the Nature NSMB paper
 2. Clone the Rhodopsin repo: `git clone https://github.com/octantbio/rho-dms.git`
 3. Place V2R data in `raw_data/` directory
-4. Run scripts in order: phase1 → phase2 → phase3 → phase4 → phase5 → figures_v2
+4. Run scripts in order: phase1 → phase2 → phase3_v2_full_rerun → phase4 → phase5 → figures_v2
 
 ## Requirements
 
-Python 3.x with: pandas, numpy, scikit-learn, scipy, matplotlib, openpyxl
+Python 3.x with: pandas, numpy, scikit-learn, scipy, matplotlib, openpyxl, torch, fair-esm
 
 ## License
 
